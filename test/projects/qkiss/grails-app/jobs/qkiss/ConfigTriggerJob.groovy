@@ -6,13 +6,15 @@ class ConfigTriggerJob{
 	
 	def concurrent = false	
 	
-	def getTriggers(){
+	def hunterService
+	
+	def getTriggers() {
 		return config.grails.plugin.quartz2.configTriggerJob
 	}
 	
     def execute() {
-		
-		new Org(name:"ConfigTriggerJob").save()
-		log.info "in ConfigTriggerJob with count:${latch.incrementAndGet() }"
+      hunterService.takeTheRide(false)
+		  new Org(name:"ConfigTriggerJob").save()
+		  log.info "in ConfigTriggerJob with count:${latch.incrementAndGet() }"
     }
 }

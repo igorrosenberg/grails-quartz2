@@ -1,11 +1,3 @@
-import static org.quartz.JobBuilder.*;
-import static org.quartz.SimpleScheduleBuilder.*;
-import static org.quartz.CronScheduleBuilder.*;
-import static org.quartz.CalendarIntervalScheduleBuilder.*;
-import static org.quartz.TriggerBuilder.*;
-import static org.quartz.DateBuilder.*;
-import org.quartz.*
-import qkiss.*
 
 grails.config.locations = [ "file:app-${appName}-quartz.groovy"]
 //                             "classpath:${appName}-config.groovy"
@@ -32,29 +24,5 @@ log4j = {
 
     warn   'org.mortbay.log'
     debug 	'qkiss'
-}
-
-grails.plugin.quartz2.jobSetup.job1 = { quartzScheduler, ctx ->
-	def org = new Org(name:'skydive')
-	Org.withTransaction{ //inside session
-		org.save()
-	}
-	// define the job and tie it to our HelloJob class
-	JobDetail job = newJob(HelloJob.class)
-		.withIdentity("configTest")
-		.usingJobData(new JobDataMap([jobDetailName:'mainConfig']) ) 
-		.build()
-
-	// Trigger the job to run now, and then every 40 seconds
-	Trigger trigger = newTrigger()
-		.withIdentity("configTestTrigger")
-		.withSchedule(simpleSchedule()
-			.withIntervalInSeconds(5)
-			.repeatForever())  
-		.startNow()          
-		.build()
-
-	// Tell quartz to schedule the job using our trigger
-	quartzScheduler.scheduleJob(job, trigger);
 }
 
